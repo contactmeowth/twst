@@ -1,0 +1,21 @@
+name: Voice Generation Test
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install edge-tts
+      - name: Run Voice Script
+        run: python test_voice.py
+      - name: Upload Audio
+        uses: actions/upload-artifact@v3
+        with:
+          name: voice-sample
+          path: test_output.mp3
+          
