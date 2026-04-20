@@ -1,26 +1,29 @@
-name: Voice Generation Test
-on: [push, workflow_dispatch] # workflow_dispatch se tum manually bhi run kar sakte ho
+name: Kokoro Background Voice
+on: [workflow_dispatch] # Button dabao aur Chrome band kar do
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # Updated to v4
+      - uses: actions/checkout@v4
       
       - name: Set up Python
-        uses: actions/setup-python@v5 # Updated to v5 for better caching
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.10'
           
-      - name: Install dependencies
-        run: pip install edge-tts
+      - name: Install System Dependencies
+        run: sudo apt-get install espeak-ng -y # Kokoro ko espeak ki zaroorat hoti hai
         
-      - name: Run Voice Script
-        run: python test_voice.py
+      - name: Install Python Libraries
+        run: pip install kokoro-onnx soundfile
         
-      - name: Upload Audio
-        uses: actions/upload-artifact@v4 # Fixed: version 4 is required in 2026
+      - name: Run Kokoro Script
+        run: python kokoro_test.py
+        
+      - name: Upload Result
+        uses: actions/upload-artifact@v4
         with:
-          name: voice-sample
-          path: test_output.mp3
+          name: kokoro-audio
+          path: github_output.wav
           
